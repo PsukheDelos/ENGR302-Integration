@@ -224,9 +224,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
 		Camera.Area focusArea = new Camera.Area(stripOverlay.getStripRectangle(), 1000);
 		List<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
 		focusAreas.add(focusArea);
-		parameters.setFocusAreas(focusAreas);
+//		parameters.setFocusAreas(focusAreas);
 
-		camera.setParameters(parameters);
+//		camera.setParameters(parameters);
 		previewCamera();
 	}
 

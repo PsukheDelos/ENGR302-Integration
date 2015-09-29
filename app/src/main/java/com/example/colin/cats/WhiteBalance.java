@@ -5,9 +5,7 @@ import android.graphics.Color;
 import java.util.Arrays;
 
 /**
- * A simple (Testing) white balancing implementation that doesnt seem to work
- * very well.
- *
+ * A simple (Testing) white balancing implementation that doesn't seem to work very well.
  */
 public class WhiteBalance {
 

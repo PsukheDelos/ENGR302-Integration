@@ -45,81 +45,44 @@ public class Algorithm {
 		Map<Double, Double> nitrateAnalysis = nitrateRecog.processImage(balancedRight);
 		Map<Double, Double> nitriteAnalysis = nitriteRecog.processImage(balancedLeft);
 
-		Map.Entry<Double, Double> bestNitriteClass = null;
-		Map.Entry<Double, Double> bestNitrateClass = null;
-		Map.Entry<Double, Double> secBestNitriteClass = null;
-		Map.Entry<Double, Double> secBestNitrateClass = null;
-
-		for(Map.Entry<Double, Double> nitrateClass : nitrateAnalysis.entrySet()){
-			if(bestNitrateClass == null){
-				bestNitrateClass = nitrateClass;
-				continue;
-			}
-			else if(secBestNitrateClass == null){
-				secBestNitrateClass = nitrateClass;
-				continue;
-			}
-
-			if(nitrateClass.getValue() > bestNitrateClass.getValue()){
-				bestNitrateClass = nitrateClass;
-			}
-			else if(nitrateClass.getValue() > secBestNitrateClass.getValue()){
-				secBestNitrateClass = nitrateClass;
-			}
-		}
-
-		for(Map.Entry<Double, Double> nitriteClass : nitriteAnalysis.entrySet()){
-			Toast.makeText(c, ""+nitriteClass.getKey() + "="+ nitriteClass.getValue(), Toast.LENGTH_LONG).show();
-			if(bestNitriteClass == null){
-				bestNitriteClass = nitriteClass;
-				continue;
-			}
-			else if(secBestNitriteClass == null){
-				secBestNitriteClass = nitriteClass;
-				continue;
-			}
-
-			if(nitriteClass.getValue() > bestNitriteClass.getValue()){
-				bestNitriteClass = nitriteClass;
-			}
-			else if(nitriteClass.getValue() > secBestNitriteClass.getValue()){
-				secBestNitriteClass = nitriteClass;
-			}
-		}
-
-		double bestNitrateProb = bestNitrateClass.getValue() / (bestNitrateClass.getValue() + secBestNitrateClass.getValue());
-		double bestNitriteProb = bestNitriteClass.getValue() / (bestNitriteClass.getValue() + secBestNitriteClass.getValue());
-
-
-		Toast.makeText(c, "Nitrate Level: " + (bestNitrateClass.getValue() * bestNitrateProb + secBestNitrateClass.getValue() * (1 - bestNitrateProb)), Toast.LENGTH_LONG).show();
-		Toast.makeText(c, "Nitrite Level: " + (bestNitriteClass.getValue() * bestNitriteProb + secBestNitriteClass.getValue() * (1 - bestNitriteProb)), Toast.LENGTH_LONG).show();
 		//Print it out nicely
-		/*double nitrateSum = 0;
+		double nitrateSum = 0;
+		Double bestNitrateClass;
 		for(Map.Entry<Double, Double> nitrateClass : nitrateAnalysis.entrySet()){
-			nitrateSum += 1 / nitrateClass.getValue();
+			//nitrateSum += 1 / nitrateClass.getValue();
+			if(bestNitrateClass == null || nitrateAnalysis.get(bestNitrateClass) > nitrateClass.getValue()){
+				bestNitrateClass = nitrateClass.getKey();
+			}
 		}
 
 		double nitriteSum = 0;
+		Double bestNitrateClass;
 		for(Map.Entry<Double, Double> nitriteClass : nitriteAnalysis.entrySet()){
-			nitriteSum += 1 / nitriteClass.getValue();
+			//nitrateSum += 1 / nitrateClass.getValue();
+			if(bestNitriteClass == null || nitriteAnalysis.get(bestNitriteClass) > nitriteClass.getValue()){
+				bestNitriteClass = nitriteClass.getKey();
+			}
 		}
 
-		double expected = 0;
-		Log.d("Test: ", "Nitrate Analysis");
-		for(Map.Entry<Double, Double> nitrateClass : nitrateAnalysis.entrySet()){
-			Log.d("Test: ", nitrateClass.getKey() + " -> " + (1 / nitrateClass.getValue()) / nitrateSum);
-			expected += (1 / nitrateClass.getValue()) / nitrateSum * nitrateClass.getKey();
-		}
-		Log.d("Test: ", "Expected Value: " + expected);
+		Toast.makeText(c, "Nitrate Class: " + bestNitrateClass, Toast.LENGTH_LONG);
+		Toast.makeText(c, "Nitrite Class: " + bestNitriteClass, Toast.LENGTH_LONG);
 
-		Log.d("Test: ","");
-
-		expected = 0;
-		Log.d("Test: ", "Nitrite Analysis");
-		for(Map.Entry<Double, Double> nitriteClass : nitriteAnalysis.entrySet()){
-			Log.d("Test: ", nitriteClass.getKey() + " -> " + (1 / nitriteClass.getValue()) / nitriteSum);
-			expected += (1 / nitriteClass.getValue()) / nitriteSum * nitriteClass.getKey();
-		}
-		Log.d("Test: ", "Expected Value: " + expected);*/
+		// double expected = 0;
+		// Log.d("Test: ", "Nitrate Analysis");
+		// for(Map.Entry<Double, Double> nitrateClass : nitrateAnalysis.entrySet()){
+		// 	Log.d("Test: ", nitrateClass.getKey() + " -> " + (1 / nitrateClass.getValue()) / nitrateSum);
+		// 	expected += (1 / nitrateClass.getValue()) / nitrateSum * nitrateClass.getKey();
+		// }
+		// Log.d("Test: ", "Expected Value: " + expected);
+		//
+		// Log.d("Test: ","");
+		//
+		// expected = 0;
+		// Log.d("Test: ", "Nitrite Analysis");
+		// for(Map.Entry<Double, Double> nitriteClass : nitriteAnalysis.entrySet()){
+		// 	Log.d("Test: ", nitriteClass.getKey() + " -> " + (1 / nitriteClass.getValue()) / nitriteSum);
+		// 	expected += (1 / nitriteClass.getValue()) / nitriteSum * nitriteClass.getKey();
+		// }
+		// Log.d("Test: ", "Expected Value: " + expected);*/
 	}
 }

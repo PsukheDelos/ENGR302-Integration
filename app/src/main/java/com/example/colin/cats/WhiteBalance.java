@@ -35,7 +35,7 @@ public class WhiteBalance {
 		Arrays.sort(greens);
 		Arrays.sort(blues);
 		
-		//Find the average of the interquartile range
+		//Find the average of the inter quartile range
 		int r = 0, g = 0, b = 0;
 		int lowerQuartile = (int)Math.floor(pointCount/4.0);
 		int upperQuartile = (int)Math.floor(3.0*(pointCount/4.0));

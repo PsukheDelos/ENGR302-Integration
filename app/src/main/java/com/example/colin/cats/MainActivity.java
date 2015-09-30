@@ -47,239 +47,227 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
-public class MainActivity extends Activity implements SurfaceHolder.Callback
-{
-	  private Camera camera = null;
-	  private SurfaceView cameraSurfaceView = null;
-	  private SurfaceHolder cameraSurfaceHolder = null;
-	  private CameraOverlay stripOverlay = null;
-	  private boolean previewing = false;
-	  RelativeLayout relativeLayout;
+public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
-	  private Button btnCapture = null;
+    private Camera camera = null;
+    private SurfaceView cameraSurfaceView = null;
+    private SurfaceHolder cameraSurfaceHolder = null;
+    private CameraOverlay stripOverlay = null;
+    private boolean previewing = false;
+    RelativeLayout relativeLayout;
 
-	  @Override
-	  protected void onCreate(Bundle savedInstanceState)
-	  {
-	    // TODO Auto-generated method stub
-	    super.onCreate(savedInstanceState);
+    private Button btnCapture = null;
 
-	    getWindow().setFormat(PixelFormat.TRANSLUCENT);
-	    requestWindowFeature(Window.FEATURE_NO_TITLE);
-	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
 
-	    setContentView(R.layout.activity_main);
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-	    relativeLayout=(RelativeLayout) findViewById(R.id.containerImg);
-	    relativeLayout.setDrawingCacheEnabled(true);
-	    cameraSurfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
-		  stripOverlay = (CameraOverlay) findViewById(R.id.stripOverlay);
-	    cameraSurfaceHolder = cameraSurfaceView.getHolder();
-	    cameraSurfaceHolder.addCallback(this);
+        setContentView(R.layout.activity_main);
 
-	    btnCapture = (Button)findViewById(R.id.button1);
-	    btnCapture.setOnClickListener(new OnClickListener()
-	    {
-	      @Override
-	      public void onClick(View v)
-	      {
-			  View b = findViewById(R.id.button1);
-			  b.setVisibility(View.INVISIBLE);
-			  View p = findViewById(R.id.progressBar);
-			  p.setVisibility(View.VISIBLE);
-	         camera.takePicture(null, null, cameraPictureCallbackJpeg);
-	      }
-	    });
+        relativeLayout=(RelativeLayout) findViewById(R.id.containerImg);
+        relativeLayout.setDrawingCacheEnabled(true);
+        cameraSurfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
+        stripOverlay = (CameraOverlay) findViewById(R.id.stripOverlay);
+        cameraSurfaceHolder = cameraSurfaceView.getHolder();
+        cameraSurfaceHolder.addCallback(this);
 
-		  final RelativeLayout layout = (RelativeLayout)findViewById(R.id.containerImg);
-		  ViewTreeObserver vto = layout.getViewTreeObserver();
-		  vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			  @Override
-			  public void onGlobalLayout() {
-//				  Camera.Parameters parameters = camera.getParameters();
-//				  		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-//		ArrayList<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
-//		focusAreas.add(new Camera.Area(stripOverlay.getStripRectangle(), 1000));
-//		parameters.setFocusAreas(focusAreas);
-//		camera.setParameters(parameters);
-//				  this.layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//				  int width = layout.getMeasuredWidth();
-//				  int height = layout.getMeasuredHeight();
+        btnCapture = (Button)findViewById(R.id.button1);
+        btnCapture.setOnClickListener(new OnClickListener()
+        {
+        @Override
+        public void onClick(View v)
+        {
+            View b = findViewById(R.id.button1);
+            b.setVisibility(View.INVISIBLE);
+            View p = findViewById(R.id.progressBar);
+            p.setVisibility(View.VISIBLE);
+            camera.takePicture(null, null, cameraPictureCallbackJpeg);
+        }
+        });
 
-			  }
-		  });
-	  }
+        final RelativeLayout layout = (RelativeLayout)findViewById(R.id.containerImg);
+        ViewTreeObserver vto = layout.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+        //				  Camera.Parameters parameters = camera.getParameters();
+        //				  		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        //		ArrayList<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
+        //		focusAreas.add(new Camera.Area(stripOverlay.getStripRectangle(), 1000));
+        //		parameters.setFocusAreas(focusAreas);
+        //		camera.setParameters(parameters);
+        //				  this.layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+        //				  int width = layout.getMeasuredWidth();
+        //				  int height = layout.getMeasuredHeight();
 
-	  PictureCallback cameraPictureCallbackJpeg = new PictureCallback()
-	  {
-	    @Override
-	    public void onPictureTaken(byte[] data, Camera camera)
-	    {
-			HashMap<String, Rect> captureRectangles = stripOverlay.getCaptureRectangles();
+        }
+        });
+        }
 
-			Bitmap cameraBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        PictureCallback cameraPictureCallbackJpeg = new PictureCallback()
+        {
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera)
+        {
+        HashMap<String, Rect> captureRectangles = stripOverlay.getCaptureRectangles();
 
-			cameraBitmap = RotateBitmap(cameraBitmap,90f);
+        Bitmap cameraBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-			int wid = cameraBitmap.getWidth();
-	    	int hgt = cameraBitmap.getHeight();
+        cameraBitmap = RotateBitmap(cameraBitmap,90f);
 
-	      	Bitmap newImage = Bitmap.createBitmap(wid, hgt, Bitmap.Config.ARGB_8888);
+        int wid = cameraBitmap.getWidth();
+        int hgt = cameraBitmap.getHeight();
 
-			Rect leftR = captureRectangles.get("leftCaptureRectangle");
-			Rect midR = captureRectangles.get("middleCaptureRectangle");
-			Rect rightR = captureRectangles.get("rightCaptureRectangle");
+        Bitmap newImage = Bitmap.createBitmap(wid, hgt, Bitmap.Config.ARGB_8888);
 
-			Bitmap left = Bitmap.createBitmap(cameraBitmap, leftR.left,leftR.top,leftR.width(),leftR.height());
-			Bitmap middle = Bitmap.createBitmap(cameraBitmap, midR.left,midR.top,midR.width(),midR.height());
-			Bitmap right = Bitmap.createBitmap(cameraBitmap, rightR.left,rightR.top,rightR.width(),rightR.height());
+        Rect leftR = captureRectangles.get("leftCaptureRectangle");
+        Rect midR = captureRectangles.get("middleCaptureRectangle");
+        Rect rightR = captureRectangles.get("rightCaptureRectangle");
 
-			Algorithm.processImages(left,middle,right);
+        Bitmap left = Bitmap.createBitmap(cameraBitmap, leftR.left,leftR.top,leftR.width(),leftR.height());
+        Bitmap middle = Bitmap.createBitmap(cameraBitmap, midR.left,midR.top,midR.width(),midR.height());
+        Bitmap right = Bitmap.createBitmap(cameraBitmap, rightR.left,rightR.top,rightR.width(),rightR.height());
 
-			Canvas leftcanvas = new Canvas(left);
-			Canvas midcanvas = new Canvas(middle);
-			Canvas rightcanvas = new Canvas(right);
-			leftcanvas.drawBitmap(left, 0f, 0f, null);
-			rightcanvas.drawBitmap(right, 0f, 0f, null);
-			midcanvas.drawBitmap(middle, 0f, 0f, null);
+        Algorithm.processImages(left,middle,right, getApplicationContext());
 
-			Canvas canvas = new Canvas(newImage);
-			canvas.drawBitmap(cameraBitmap, 0f, 0f, null);
+        Canvas leftcanvas = new Canvas(left);
+        Canvas midcanvas = new Canvas(middle);
+        Canvas rightcanvas = new Canvas(right);
+        leftcanvas.drawBitmap(left, 0f, 0f, null);
+        rightcanvas.drawBitmap(right, 0f, 0f, null);
+        midcanvas.drawBitmap(middle, 0f, 0f, null);
 
-			File storagePath = new File(Environment.getExternalStorageDirectory() + "/PhotoAR/");
-			storagePath.mkdirs();
+        Canvas canvas = new Canvas(newImage);
+        canvas.drawBitmap(cameraBitmap, 0f, 0f, null);
 
-			File leftImage = new File(storagePath, Long.toString(System.currentTimeMillis()) + "-left.jpg");
-			File midImage = new File(storagePath, Long.toString(System.currentTimeMillis()) + "-mid.jpg");
-			File rightImage = new File(storagePath, Long.toString(System.currentTimeMillis()) + "-right.jpg");
+        File storagePath = new File(Environment.getExternalStorageDirectory() + "/PhotoAR/");
+        storagePath.mkdirs();
 
-	      	File myImage = new File(storagePath, Long.toString(System.currentTimeMillis()) + ".jpg");
+        File leftImage = new File(storagePath, Long.toString(System.currentTimeMillis()) + "-left.jpg");
+        File midImage = new File(storagePath, Long.toString(System.currentTimeMillis()) + "-mid.jpg");
+        File rightImage = new File(storagePath, Long.toString(System.currentTimeMillis()) + "-right.jpg");
 
-			try
-			{
-				FileOutputStream out = new FileOutputStream(leftImage);
-				left.compress(Bitmap.CompressFormat.JPEG, 80, out);
-				out.flush();
-				out.close();
+        File myImage = new File(storagePath, Long.toString(System.currentTimeMillis()) + ".jpg");
 
-				out = new FileOutputStream(rightImage);
-				right.compress(Bitmap.CompressFormat.JPEG, 80, out);
-				out.flush();
-				out.close();
+        try {
+            FileOutputStream out = new FileOutputStream(leftImage);
+            left.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            out.flush();
+            out.close();
 
-				out = new FileOutputStream(midImage);
-				middle.compress(Bitmap.CompressFormat.JPEG, 80, out);
-				out.flush();
-				out.close();
+            out = new FileOutputStream(rightImage);
+            right.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            out.flush();
+            out.close();
 
-				out = new FileOutputStream(myImage);
-				newImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
-				out.flush();
-				out.close();
-			}
-			catch(IOException e)
-			{
-				Log.d("In Saving File", e + "");
-			}
-	        camera.startPreview();
+            out = new FileOutputStream(midImage);
+            middle.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            out.flush();
+            out.close();
 
-			left.recycle();
-			right.recycle();
-			middle.recycle();
-	        newImage.recycle();
+            out = new FileOutputStream(myImage);
+            newImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            out.flush();
+            out.close();
+        }
+        catch(IOException e) {
+            Log.d("In Saving File", e + "");
+        }
+        camera.startPreview();
 
-//	        Intent intent = new Intent();
-//	        intent.setAction(Intent.ACTION_VIEW);
-//
-//	        intent.setDataAndType(Uri.parse("file://" + myImage.getAbsolutePath()), "image/*");
-//	        startActivity(intent);
+        left.recycle();
+        right.recycle();
+        middle.recycle();
+        newImage.recycle();
 
-			//clean this up
-			View p = findViewById(R.id.progressBar);
-			p.setVisibility(View.INVISIBLE);
-			View b = findViewById(R.id.button1);
-			b.setVisibility(View.VISIBLE);
-	    }
-	  };
+        //	        Intent intent = new Intent();
+        //	        intent.setAction(Intent.ACTION_VIEW);
+        //
+        //	        intent.setDataAndType(Uri.parse("file://" + myImage.getAbsolutePath()), "image/*");
+        //	        startActivity(intent);
 
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
-	{
-		if (previewing)
-		{
-			camera.stopPreview();
-		}
+        //clean this up
+        View p = findViewById(R.id.progressBar);
+        p.setVisibility(View.INVISIBLE);
+        View b = findViewById(R.id.button1);
+        b.setVisibility(View.VISIBLE);
+    }
+    };
 
-		Camera.Parameters parameters = camera.getParameters();
-		Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        if (previewing) {
+            camera.stopPreview();
+        }
 
-		Toast.makeText(getApplicationContext(), ""+display.getRotation(), Toast.LENGTH_LONG).show();
+        Camera.Parameters parameters = camera.getParameters();
+        Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
-		//We always assume the Rotation is 0
-		parameters.setPreviewSize(height, width);
-		camera.setDisplayOrientation(90);
+        Toast.makeText(getApplicationContext(), ""+display.getRotation(), Toast.LENGTH_LONG).show();
 
-		camera.cancelAutoFocus();
-		Toast.makeText(getApplicationContext(),""+stripOverlay.getStripRectangle(),Toast.LENGTH_LONG).show();
-		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-		Camera.Area focusArea = new Camera.Area(stripOverlay.getStripRectangle(), 1000);
-		List<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
-		focusAreas.add(focusArea);
-//		parameters.setFocusAreas(focusAreas);
+        //We always assume the Rotation is 0
+        parameters.setPreviewSize(height, width);
+        camera.setDisplayOrientation(90);
 
-//		camera.setParameters(parameters);
-		previewCamera();
-	}
+        camera.cancelAutoFocus();
+        Toast.makeText(getApplicationContext(),""+stripOverlay.getStripRectangle(),Toast.LENGTH_LONG).show();
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        Camera.Area focusArea = new Camera.Area(stripOverlay.getStripRectangle(), 1000);
+        List<Camera.Area> focusAreas = new ArrayList<Camera.Area>();
+        focusAreas.add(focusArea);
+        //		parameters.setFocusAreas(focusAreas);
 
-	  @Override
-	  public void surfaceCreated(SurfaceHolder holder)
-	  {
-	    try
-	    {
-	      camera = Camera.open();
-	    }
-	    catch(RuntimeException e)
-	    {
-	      Toast.makeText(getApplicationContext(), "Device camera is not working properly.", Toast.LENGTH_LONG).show();
-	    }
-	  }
+        //		camera.setParameters(parameters);
+        previewCamera();
+    }
 
-	  @Override
-	  public void surfaceDestroyed(SurfaceHolder holder)
-	  {
-	    camera.stopPreview();
-	    camera.release();
-	    camera = null;
-	    previewing = false;
-	  }
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        try {
+            camera = Camera.open();
+        }
+        catch(RuntimeException e) {
+            Toast.makeText(getApplicationContext(), "Device camera is not working properly.", Toast.LENGTH_LONG).show();
+        }
+    }
 
-	public void previewCamera()
-	{
-		try
-		{
-			camera.setPreviewDisplay(cameraSurfaceHolder);
-			camera.startPreview();
-			previewing = true;
-		}
-		catch(Exception e)
-		{
-			//Log.d(APP_CLASS, "Cannot start preview", e);
-		}
-	}
-	public void getScreenDimensions(){
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        camera.stopPreview();
+        camera.release();
+        camera = null;
+        previewing = false;
+    }
 
-		Display display = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-		int screen_width = size.x;
-		int screen_height = size.y;
-		System.out.println("Real Width: " + screen_width);
-		System.out.println("Real Height: " + screen_height);
-	}
+    public void previewCamera() {
+        try {
+            camera.setPreviewDisplay(cameraSurfaceHolder);
+            camera.startPreview();
+            previewing = true;
+        }
+        catch(Exception e) {
+            //Log.d(APP_CLASS, "Cannot start preview", e);
+        }
+    }
+    public void getScreenDimensions(){
 
-	public static Bitmap RotateBitmap(Bitmap source, float angle)
-	{
-		Matrix matrix = new Matrix();
-		matrix.postRotate(angle);
-		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-	}
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screen_width = size.x;
+        int screen_height = size.y;
+        System.out.println("Real Width: " + screen_width);
+        System.out.println("Real Height: " + screen_height);
+    }
+
+    public static Bitmap RotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
 }

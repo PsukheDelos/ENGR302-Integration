@@ -28,6 +28,7 @@ public class HSBColor {
 	public HSBColor(int rgb){
 		//Some bit shifting to extract the components
 		float[] data = new float[3];
+		System.err.println("RGB: " + rgb);
 		Color.colorToHSV(rgb, data);
 		h = data[0];
 		s = data[1];
@@ -45,5 +46,9 @@ public class HSBColor {
 	
 	public float floatDifferenceFrom(HSBColor other) {
 		return Math.abs(this.h - other.h) + Math.abs(this.s - other.s) + Math.abs(this.b - other.b);
+	}
+
+	public String toString(){
+		return "H: " + h + " S: " + s + " B: " + b;
 	}
 }
